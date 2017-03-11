@@ -73,8 +73,9 @@ See [new Manager(url[, options])](#managerurl-options) for available `options`.
 
   - `url` _(String)_
   - `options` _(Object)_
+    - `path` _(String)_ name of the path that is captured on the server side (`/socket.io`)
     - `reconnection` _(Boolean)_ whether to reconnect automatically (`true`)
-    - `reconnectionAttempts` _(Number)_ number of reconnection attemps before giving up (`Infinity`)
+    - `reconnectionAttempts` _(Number)_ number of reconnection attempts before giving up (`Infinity`)
     - `reconnectionDelay` _(Number)_ how long to initially wait before attempting a new
       reconnection (`1000`). Affected by +/- `randomizationFactor`,
       for example the default initial delay will be between 500 to 1500ms.
@@ -270,6 +271,8 @@ socket.on('news', function (data) {
   console.log(data);
 });
 ```
+
+The socket actually inherits every method of the [Emitter](https://github.com/component/emitter) class, like `hasListeners`, `once` or `off` (to remove an event listener).
 
 #### socket.compress(value)
 
