@@ -105,4 +105,59 @@ describe('socket', function () {
       socket.compress(false).emit('hi');
     });
   });
+
+  describe('query option', function () {
+    it('should accept an object (default namespace)', function (done) {
+      var socket = io('/', { forceNew: true, query: { e: 'f' } });
+
+      socket.emit('getHandshake', function (handshake) {
+        console.log('getHandhskae', handshake);
+        expect(handshake.query.e).to.be('f');
+        socket.disconnect();
+        done();
+      });
+    });
+
+    it('should accept a query string (default namespace)', function (done) {
+      var socket = io('/?c=d', { forceNew: true });
+
+      socket.emit('getHandshake', function (handshake) {
+        console.log('getHandhskae', handshake);
+        expect(handshake.query.c).to.be('d');
+        socket.disconnect();
+        done();
+      });
+    });
+
+    it('should accept an object', function (done) {
+      var socket = io('/abc', {query: {a: 'b'}});
+
+      socket.on('handshake', function (handshake) {
+        expect(handshake.query.a).to.be('b');
+        socket.disconnect();
+        done();
+      });
+    });
+
+    it('should accept a query string', function (done) {
+      var socket = io('/abc?b=c&d=e');
+
+      socket.on('handshake', function (handshake) {
+        expect(handshake.query.b).to.be('c');
+        expect(handshake.query.d).to.be('e');
+        socket.disconnect();
+        done();
+      });
+    });
+
+    it('should properly encode the parameters', function (done) {
+      var socket = io('/abc', {query: {'&a': '&=?a'}});
+
+      socket.on('handshake', function (handshake) {
+        expect(handshake.query['&a']).to.be('&=?a');
+        socket.disconnect();
+        done();
+      });
+    });
+  });
 });
